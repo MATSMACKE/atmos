@@ -18,13 +18,16 @@ int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("Invalid arguments");
     } else {
+        printf("\n");
+
         double target_alt = atof(argv[1]); // in meters
 
         AtmState result = calculate(target_alt);
 
         printf("Temperature: %f K\n", result.temp);
         printf("Pressure: %f Pa\n", result.pres);
-        printf("Density: %f kg/m^3\n\n", result.dens);
+        printf("Density: %f kg/m^3\n", result.dens);
+        printf("Speed of sound: %f\n\n", sqrt(1.4 * 287.0 * result.temp));
     }
 }
 
@@ -54,7 +57,26 @@ AtmState calculate(double target_alt) {
                 } else {
                     increment(&state, 15000., 0.0028);
 
-                    increment_iso(&state, target_alt - 47000.);
+                    if (target_alt < 51000.) {
+                        increment_iso(&state, target_alt - 47000.);
+                    }
+                    else {
+                        increment_iso(&state, 4000.);
+
+                        if (target_alt < 71000.) {
+                            increment(&state, target_alt - 51000., -0.0028);
+                        } else {
+                            increment(&state, 20000., -0.0028);
+
+                            if (target_alt < 80000.) {
+                                increment(&state, target_alt - 71000., -0.002);
+                            } else {
+                                printf("=== IMPORTANT: Cannot accurately calculate above 80 km; not defined in the International Standard Atmosphere. ===\n\n");
+
+                                increment_iso(&state, target_alt - 71000.);
+                            }
+                        }
+                    }
                 }
             }
         }

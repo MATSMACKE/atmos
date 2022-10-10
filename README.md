@@ -3,8 +3,12 @@
 
 ### Usage
 
-Simply run `./atmos h`, putting your altitude in meters instead of `h`. For example, for 10 km altitude: `./atmos 10000`.
+For the C version, simply run `./atmos h`, putting your altitude in meters instead of `h`. For example, for 10 km altitude: `./atmos 10000`.
+
+For the Haskell version, run ./atmos, and it'll be obvious from there.
 
 ### Compiling
 
-No tools other than a simple C compiler with standard library are required.
+For the C version, a C compiler and standard library are required.
+
+For the Haskell version, GHC and the Haskell standard library are required.
